@@ -1,0 +1,14 @@
+{{#each result}}
+
+<li class="list-group-item">
+  <div class="row">
+    <div class="col-auto mr-auto">
+      <p>標題：{{this.title}}</p>
+      <p>網址：<a href="{{this.url}}" target="_blank">{{this.url}}</a></p>
+      <p>作者：{{this.author}}</p>
+      <p>時間：{{this.date}}</p>
+    </div>
+  </div>
+</li>
+
+{{/each}}
