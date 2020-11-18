@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const axios = require('axios')
 const cheerio = require('cheerio')
+const FormData = require('form-data')
 const exphbs = require('express-handlebars')
 
 const app = express()
@@ -36,6 +37,37 @@ app.get('/', (req, res) => {
       console.log(error)
     })
 })
+
+function lineNotify() {
+  const token = process.env.LINE_TOKEN
+
+  const form_data = new FormData()
+  form_data.append('message', '測試 Line Notify 訊息 from coding')
+
+  const headers = Object.assign({
+    'Authorization': `Bearer ${token}`
+  }, form_data.getHeaders())
+
+  axios({
+    method: 'post',
+    url: 'https://notify-api.line.me/api/notify',
+    data: form_data,
+    headers: headers
+  }).then(function (response) {
+    console.log('HTTP 狀態碼：' + response)
+    console.log(response.data)
+  }).catch(function (error) {
+    console.error('Line 通知訊息發送失敗')
+    if (error.response) {
+      console.error('HTTP 狀態碼：' + error)
+      console.error(error.response.data)
+    } else {
+      console.error(error)
+    }
+  })
+}
+lineNotify()
+console.log(lineNotify())
 
 app.listen(PORT, () => {
   console.log(`notifyBot is running on localhost:${PORT}`)
