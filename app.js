@@ -45,10 +45,6 @@ function crawlerPtt() {
     url: `${pttBaseUrl}/bbs/Soft_Job/index.html`
   }).then((infos) => {
     let result = []
-    let title = []
-    let comment = []
-    let date = []
-    let url = []
 
     const $ = cheerio.load(infos.data)
     const list = $('.r-list-container .r-ent')
@@ -60,44 +56,35 @@ function crawlerPtt() {
       let crawlUrl = pttBaseUrl + crawlLink
 
       result.push({ crawlTitle, crawlComment, crawlDate, crawlUrl })
-      title.push({ crawlTitle })
-      comment.push({ crawlComment })
-      date.push({ crawlDate })
-      url.push({ crawlUrl })
     }
-    // console.log('result======>', result)
+    // // 篩選標題
+    // const titleResults = Object.values(result).map(item => item.crawlTitle)
+    // function filterItems(query) {
+    //   return titleResults.filter(function (el) {
+    //     return el.toLowerCase().indexOf(query.toLowerCase()) > -1
+    //   })
+    // }
+    // console.log(filterItems('徵才'))
 
-    // 篩選標題
-    const titleResults = Object.values(result).map(item => item.crawlTitle)
-    function filterItems(query) {
-      return titleResults.filter(function (el) {
-        return el.toLowerCase().indexOf(query.toLowerCase()) > -1
-      })
-    }
-    console.log(filterItems('徵才'))
-
-    // 篩選推文數
-    const commentResults = Object.values(result).map(item => item.crawlComment)
-    const filterComment = Object.values(result).filter(item => item.crawlComment > 10)
-    console.log(filterComment)
+    // // 篩選推文數
+    // const filterComment = Object.values(result).filter(item => item.crawlComment > 10)
+    // console.log(filterComment)
 
     // // 只能送單一則 result，不然會顯示不支援 arrays
     // let message = `${Object.values(result[0])}`
 
-    let message = `\n標題：${Object.values(title[1])} \n推文數：${Object.values(comment[1])}\n發布日期：${Object.values(date[1])}\n網址：${Object.values(url[1])}`
+    let message = `\n標題：${result[1].crawlTitle} \n推文數：${result[1].crawlComment}\n發布日期：${result[1].crawlDate}\n網址：${result[1].crawlUrl}`
     console.log('message =====> ', message)
 
     return message
-    // return { 'result': result, 'title': title, 'comment': comment, 'date': date, 'url': url }
   })
     .catch((error) => {
       console.log(error)
     })
 }
-console.log('============================================')
 crawlerPtt()
 
-
+// 傳送 line notify 訊息
 async function lineNotify() {
   const token = process.env.LINE_TOKEN
 
