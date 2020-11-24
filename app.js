@@ -53,18 +53,37 @@ function crawlerPtt() {
     const $ = cheerio.load(infos.data)
     const list = $('.r-list-container .r-ent')
     for (let i = 0; i < list.length - 4; i++) {
-      let crawTitle = list.eq(i).find('.title a').text()
-      let crawComment = list.eq(i).find('.nrec span').text()
-      let crawDate = list.eq(i).find('.date').text()
-      let crawLink = list.eq(i).find('a').attr('href')
-      let crawUrl = pttBaseUrl + crawLink
+      let crawlTitle = list.eq(i).find('.title a').text()
+      let crawlComment = list.eq(i).find('.nrec span').text()
+      let crawlDate = list.eq(i).find('.date').text()
+      let crawlLink = list.eq(i).find('a').attr('href')
+      let crawlUrl = pttBaseUrl + crawlLink
 
-      result.push({ crawTitle, crawComment, crawDate, crawUrl })
-      title.push({ crawTitle })
-      comment.push({ crawComment })
-      date.push({ crawDate })
-      url.push({ crawUrl })
+      result.push({ crawlTitle, crawlComment, crawlDate, crawlUrl })
+      title.push({ crawlTitle })
+      comment.push({ crawlComment })
+      date.push({ crawlDate })
+      url.push({ crawlUrl })
     }
+    // console.log('result======>', result)
+
+    // 篩選標題
+    const titleResults = Object.values(result).map(item => item.crawlTitle)
+    function filterItems(query) {
+      return titleResults.filter(function (el) {
+        return el.toLowerCase().indexOf(query.toLowerCase()) > -1
+      })
+    }
+    console.log(filterItems('徵才'))
+
+    // 篩選推文數
+    const commentResults = Object.values(result).map(item => item.crawlComment)
+    const filterComment = Object.values(result).filter(item => item.crawlComment > 10)
+    console.log(filterComment)
+
+    // // 只能送單一則 result，不然會顯示不支援 arrays
+    // let message = `${Object.values(result[0])}`
+
     let message = `\n標題：${Object.values(title[1])} \n推文數：${Object.values(comment[1])}\n發布日期：${Object.values(date[1])}\n網址：${Object.values(url[1])}`
     console.log('message =====> ', message)
 
@@ -77,15 +96,6 @@ function crawlerPtt() {
 }
 console.log('============================================')
 crawlerPtt()
-
-// app.get('/', (req, res) => {
-//   crawlerPtt()
-//     .then(data => {
-//       res.json({ message: 'Request received!', data })
-//       console.log(data)
-//     })
-//     .catch(err => console.log(err))
-// })
 
 
 async function lineNotify() {
