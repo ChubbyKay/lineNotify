@@ -13,31 +13,6 @@ const PORT = 3000
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
-// // 測試網頁可否得到資料
-// const pttBaseUrl = 'https://www.ptt.cc'
-
-// app.get('/', (req, res) => {
-//   axios.get(`${pttBaseUrl}/bbs/Soft_Job/index.html`)
-//     .then((infos) => {
-//       let result = []
-//       const $ = cheerio.load(infos.data)
-//       const list = $('.r-list-container .r-ent')
-//       for (let i = 0; i < list.length - 4; i++) {
-//         const title = list.eq(i).find('.title a').text()
-//         const comment = list.eq(i).find('.nrec span').text()
-//         const date = list.eq(i).find('.date').text()
-//         const link = list.eq(i).find('a').attr('href')
-//         const url = pttBaseUrl + link
-
-//         result.push({ title, comment, date, url })
-//       }
-//       res.render('index', { result })
-//     })
-//     .catch((error) => {
-//       console.log(error)
-//     })
-// })
-
 function crawlerPtt() {
   const pttBaseUrl = 'https://www.ptt.cc'
   return axios({
@@ -70,8 +45,6 @@ function crawlerPtt() {
     // const filterComment = Object.values(result).filter(item => item.crawlComment > 10)
     // console.log(filterComment)
 
-    // // 只能送單一則 result，不然會顯示不支援 arrays
-    // let message = `${Object.values(result[0])}`
 
     let message = `\n標題：${result[1].crawlTitle} \n推文數：${result[1].crawlComment}\n發布日期：${result[1].crawlDate}\n網址：${result[1].crawlUrl}`
     console.log('message =====> ', message)
@@ -82,12 +55,10 @@ function crawlerPtt() {
       console.log(error)
     })
 }
-crawlerPtt()
 
 // 傳送 line notify 訊息
 async function lineNotify() {
   const token = process.env.LINE_TOKEN
-
   const message = await crawlerPtt()
 
   // 使用 form-data 傳遞資料
@@ -118,7 +89,33 @@ async function lineNotify() {
   })
 }
 lineNotify()
+setInterval(lineNotify, 60 * 60 * 1000);
 
 app.listen(PORT, () => {
   console.log(`notifyBot is running on localhost:${PORT}`)
 })
+
+// // 測試網頁可否得到資料
+// const pttBaseUrl = 'https://www.ptt.cc'
+
+// app.get('/', (req, res) => {
+//   axios.get(`${pttBaseUrl}/bbs/Soft_Job/index.html`)
+//     .then((infos) => {
+//       let result = []
+//       const $ = cheerio.load(infos.data)
+//       const list = $('.r-list-container .r-ent')
+//       for (let i = 0; i < list.length - 4; i++) {
+//         const title = list.eq(i).find('.title a').text()
+//         const comment = list.eq(i).find('.nrec span').text()
+//         const date = list.eq(i).find('.date').text()
+//         const link = list.eq(i).find('a').attr('href')
+//         const url = pttBaseUrl + link
+
+//         result.push({ title, comment, date, url })
+//       }
+//       res.render('index', { result })
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     })
+// })
