@@ -32,14 +32,6 @@ function crawlerPtt() {
 
       result.push({ crawlTitle, crawlComment, crawlDate, crawlUrl })
     }
-    // // 篩選標題
-    // const titleResults = Object.values(result).map(item => item.crawlTitle)
-    // function filterItems(query) {
-    //   return titleResults.filter(function (el) {
-    //     return el.toLowerCase().indexOf(query.toLowerCase()) > -1
-    //   })
-    // }
-    // console.log('filterItems====>', filterItems('徵才'))
 
     // 篩選推文數
     const filterComment = Object.values(result).filter(item => item.crawlComment > 10)
@@ -92,6 +84,16 @@ setInterval(lineNotify, 60 * 60 * 1000);
 app.listen(PORT, () => {
   console.log(`notifyBot is running on localhost:${PORT}`)
 })
+
+
+   // // 篩選標題
+    // const titleResults = Object.values(result).map(item => item.crawlTitle)
+    // function filterItems(query) {
+    //   return titleResults.filter(function (el) {
+    //     return el.toLowerCase().indexOf(query.toLowerCase()) > -1
+    //   })
+    // }
+    // console.log('filterItems====>', filterItems('徵才'))
 
 
 // // 測試網頁可否得到資料
