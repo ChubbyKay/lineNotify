@@ -39,17 +39,15 @@ function crawlerPtt() {
     //     return el.toLowerCase().indexOf(query.toLowerCase()) > -1
     //   })
     // }
-    // console.log(filterItems('徵才'))
+    // console.log('filterItems====>', filterItems('徵才'))
 
-    // // 篩選推文數
-    // const filterComment = Object.values(result).filter(item => item.crawlComment > 10)
-    // console.log(filterComment)
+    // 篩選推文數
+    const filterComment = Object.values(result).filter(item => item.crawlComment > 10)
+    console.log('filterComment ===>', filterComment)
+    let filterCommentResult = `\n標題：${filterComment[0].crawlTitle} \n推文數：${filterComment[0].crawlComment}\n發布日期：${filterComment[0].crawlDate}\n網址：${filterComment[0].crawlUrl}\n\n標題：${filterComment[1].crawlTitle} \n推文數：${filterComment[1].crawlComment}\n發布日期：${filterComment[1].crawlDate}\n網址：${filterComment[1].crawlUrl}\n\n標題：${filterComment[2].crawlTitle} \n推文數：${filterComment[2].crawlComment}\n發布日期：${filterComment[2].crawlDate}\n網址：${filterComment[2].crawlUrl}`
+    console.log('filterCommentResult====>', filterCommentResult)
 
-
-    let message = `\n標題：${result[1].crawlTitle} \n推文數：${result[1].crawlComment}\n發布日期：${result[1].crawlDate}\n網址：${result[1].crawlUrl}`
-    console.log('message =====> ', message)
-
-    return message
+    return filterCommentResult
   })
     .catch((error) => {
       console.log(error)
@@ -94,6 +92,7 @@ setInterval(lineNotify, 60 * 60 * 1000);
 app.listen(PORT, () => {
   console.log(`notifyBot is running on localhost:${PORT}`)
 })
+
 
 // // 測試網頁可否得到資料
 // const pttBaseUrl = 'https://www.ptt.cc'
